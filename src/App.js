@@ -592,7 +592,7 @@ function App() {
             }
 
             // eslint-disable-next-line no-unused-vars
-            const { data, error } = await query; // Added eslint-disable-next-line
+            const { data, error } = await query; // Line 1276: Added eslint-disable-next-line
             if (error) throw error;
 
             if (searchType === 'vendorsByProduct') {

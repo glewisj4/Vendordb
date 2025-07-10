@@ -16,29 +16,35 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "tailwind-init": "tailwindcss init -p"
   },
   "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ],
-      "globals": {
-        "__app_id": "readonly",
-        "__firebase_config": "readonly",
-        "window": "readonly"
-      }
-    },
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "globals": {
+      "__app_id": "readonly",
+      "__firebase_config": "readonly",
+      "window": "readonly"
     }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11"
+  }
 }

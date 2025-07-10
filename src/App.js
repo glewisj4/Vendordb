@@ -1624,7 +1624,7 @@ function App() {
                             <p><strong className="font-medium">Website:</strong> <a href={selectedVendorForDetails.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{selectedVendorForDetails.website}</a></p>
                             <p><strong className="font-medium">Address:</strong> {`${selectedVendorForDetails.address || ''}, ${selectedVendorForDetails.city || ''}, ${selectedVendorForDetails.state || ''} ${selectedVendorForDetails.zip_code || ''}`}</p>
                             <p><strong className="font-medium">Contact Preferences:</strong> {selectedVendorForDetails.contact_preferences || 'N/A'}</p>
-                            <p><strong className="font-medium">Process Notes:</strong> {selectedVendorForDetails.notes || 'N/A'}</p>
+                            <p><strong className="font-medium">Process Notes:</strong> {selectedVendorForDetails.process_notes || 'N/A'}</p>
                             <p><strong className="font-medium">General Notes:</strong> {selectedVendorForDetails.notes || 'N/A'}</p>
                         </div>
 

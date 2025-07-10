@@ -258,11 +258,9 @@ function App() {
         if (!supabaseClientInstance || !isAuthReady || !userId) return; // Require userId for data fetching
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance.from('vendors').select('*');
-            if (error) throw error;
-            setVendors(data);
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            const response = await supabaseClientInstance.from('vendors').select('*'); // Changed to response
+            if (response.error) throw response.error;
+            setVendors(response.data); // Use response.data
             setErrorMessage('');
         } catch (error) {
             console.error("Error fetching vendors:", error.message);
@@ -276,11 +274,9 @@ function App() {
         if (!supabaseClientInstance || !isAuthReady || !userId) return; // Require userId for data fetching
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance.from('products').select('*');
-            if (error) throw error;
-            setProducts(data);
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            const response = await supabaseClientInstance.from('products').select('*'); // Changed to response
+            if (response.error) throw response.error;
+            setProducts(response.data); // Use response.data
             setErrorMessage('');
         } catch (error) {
             console.error("Error fetching products:", error.message);
@@ -294,14 +290,12 @@ function App() {
         if (!supabaseClientInstance || !isAuthReady || !userId) return; // Require userId for data fetching
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance.from('representatives').select(`
+            const response = await supabaseClientInstance.from('representatives').select(` // Changed to response
                 *,
                 vendors (name)
             `);
-            if (error) throw error;
-            setRepresentatives(data);
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            if (response.error) throw response.error;
+            setRepresentatives(response.data); // Use response.data
             setErrorMessage('');
         } catch (error) {
             console.error("Error fetching representatives:", error.message);
@@ -341,12 +335,11 @@ function App() {
                 authResponse = await supabaseClientInstance.auth.signUp({ email, password });
             }
 
-            const { data, error } = authResponse; // Destructuring data here
+            if (authResponse.error) throw authResponse.error; // Use authResponse.error
 
-            if (error) throw error;
-
+            // Check authResponse.data explicitly to satisfy linter if not used otherwise
             // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            const _authData = authResponse.data;
 
             if (isLoginMode) {
                 showMessage('Logged in successfully!', 'success');
@@ -383,11 +376,9 @@ function App() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance.from('vendors').insert([newVendor]).select();
-            if (error) throw error;
-            setVendors(prev => [...prev, data[0]]);
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            const response = await supabaseClientInstance.from('vendors').insert([newVendor]).select(); // Changed to response
+            if (response.error) throw response.error;
+            setVendors(prev => [...prev, response.data[0]]); // Use response.data
             setNewVendor({
                 name: '', address: '', city: '', state: '', zip_code: '',
                 phone: '', email: '', website: '', notes: '',
@@ -406,11 +397,9 @@ function App() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance.from('products').insert([newProduct]).select();
-            if (error) throw error;
-            setProducts(prev => [...prev, data[0]]);
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            const response = await supabaseClientInstance.from('products').insert([newProduct]).select(); // Changed to response
+            if (response.error) throw response.error;
+            setProducts(prev => [...prev, response.data[0]]); // Use response.data
             setNewProduct({ name: '', type: '', description: '' });
             showMessage('Product added successfully!', 'success');
         } catch (error) {
@@ -430,13 +419,10 @@ function App() {
         setLoading(true);
         try {
             const repData = { ...newRepresentative, vendor_id: selectedVendorForRep };
-            const { data, error } = await supabaseClientInstance.from('representatives').insert([repData]).select();
-            if (error) throw error;
+            const response = await supabaseClientInstance.from('representatives').insert([repData]).select(); // Changed to response
+            if (response.error) throw response.error;
             fetchRepresentatives(); // Re-fetch representatives to get the vendor name joined
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
             setNewRepresentative({ vendor_id: '', name: '', email: '', phone: '', title: '' });
-            setSelectedVendorForRep('');
             showMessage('Representative added successfully!', 'success');
         } catch (error) {
             console.error("Error adding representative:", error.message);
@@ -456,17 +442,15 @@ function App() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data, error } = await supabaseClientInstance
+            const response = await supabaseClientInstance // Changed to response
                 .from('vendors')
                 .update(editingVendor)
                 .eq('id', editingVendor.id)
                 .select();
 
-            if (error) throw error;
+            if (response.error) throw response.error; // Use response.error
 
-            setVendors(prev => prev.map(v => v.id === data[0].id ? data[0] : v));
-            // eslint-disable-next-line no-unused-vars
-            const _data = data; // Explicitly "use" data to satisfy linter
+            setVendors(prev => prev.map(v => v.id === response.data[0].id ? response.data[0] : v)); // Use response.data
             setEditingVendor(null);
             setCurrentPage('viewVendors');
             showMessage('Vendor updated successfully!', 'success');
@@ -485,14 +469,12 @@ function App() {
             async () => {
                 setLoading(true);
                 try {
-                    const { data, error } = await supabaseClientInstance // Destructure data here
+                    const response = await supabaseClientInstance // Changed to response
                         .from('vendors')
                         .delete()
                         .eq('id', vendorId);
 
-                    if (error) throw error;
-                    // eslint-disable-next-line no-unused-vars
-                    const _data = data; // Explicitly "use" data to satisfy linter
+                    if (response.error) throw response.error; // Use response.error
 
                     setVendors(prev => prev.filter(v => v.id !== vendorId));
                     showMessage('Vendor deleted successfully!', 'success');
@@ -513,14 +495,12 @@ function App() {
             async () => {
                 setLoading(true);
                 try {
-                    const { data, error } = await supabaseClientInstance // Destructure data here
+                    const response = await supabaseClientInstance // Changed to response
                         .from('products')
                         .delete()
                         .eq('id', productId);
 
-                    if (error) throw error;
-                    // eslint-disable-next-line no-unused-vars
-                    const _data = data; // Explicitly "use" data to satisfy linter
+                    if (response.error) throw response.error; // Use response.error
 
                     setProducts(prev => prev.filter(p => p.id !== productId));
                     showMessage('Product deleted successfully!', 'success');
@@ -541,14 +521,12 @@ function App() {
             async () => {
                 setLoading(true);
                 try {
-                    const { data, error } = await supabaseClientInstance // Destructure data here
+                    const response = await supabaseClientInstance // Changed to response
                         .from('representatives')
                         .delete()
                         .eq('id', repId);
 
-                    if (error) throw error;
-                    // eslint-disable-next-line no-unused-vars
-                    const _data = data; // Explicitly "use" data to satisfy linter
+                    if (response.error) throw response.error; // Use response.error
 
                     setRepresentatives(prev => prev.filter(r => r.id !== repId));
                     showMessage('Representative deleted successfully!', 'success');
@@ -591,16 +569,15 @@ function App() {
                 return;
             }
 
-            // eslint-disable-next-line no-unused-vars
-            const { data, error } = await query; // Line 1276: Added eslint-disable-next-line
-            if (error) throw error;
+            const response = await query; // Changed to response
+            if (response.error) throw response.error; // Use response.error
 
             if (searchType === 'vendorsByProduct') {
-                setSearchResults(data.map(item => ({ ...item.vendors, productName: item.products.name })));
+                setSearchResults(response.data.map(item => ({ ...item.vendors, productName: item.products.name }))); // Use response.data
             } else {
-                setSearchResults(data);
+                setSearchResults(response.data); // Use response.data
             }
-            showMessage(`Found ${data.length} results.`, 'success');
+            showMessage(`Found ${response.data.length} results.`, 'success'); // Use response.data.length
         } catch (error) {
             console.error("Error during search:", error.message);
             showMessage(`Search failed: ${error.message}`, 'error');
@@ -619,23 +596,23 @@ function App() {
 
         try {
             // Fetch representatives for this vendor
-            const { data: repsData, error: repsError } = await supabaseClientInstance
+            const repsResponse = await supabaseClientInstance // Changed to repsResponse
                 .from('representatives')
                 .select('*')
                 .eq('vendor_id', vendor.id);
-            if (repsError) throw repsError;
-            setVendorDetailReps(repsData);
+            if (repsResponse.error) throw repsResponse.error; // Use repsResponse.error
+            setVendorDetailReps(repsResponse.data); // Use repsResponse.data
 
             // Fetch products for this vendor (via vendor_products join)
-            const { data: productsData, error: productsError } = await supabaseClientInstance
+            const productsResponse = await supabaseClientInstance // Changed to productsResponse
                 .from('vendor_products')
                 .select(`
                     products (id, name, type, description)
                 `)
                 .eq('vendor_id', vendor.id);
-            if (productsError) throw productsError;
+            if (productsResponse.error) throw productsResponse.error; // Use productsResponse.error
             // Flatten the results to get just the product objects
-            setVendorDetailProducts(productsData.map(item => item.products));
+            setVendorDetailProducts(productsResponse.data.map(item => item.products)); // Use productsResponse.data
 
             setCurrentPage('viewVendorDetails');
         } catch (error) {
@@ -662,7 +639,6 @@ function App() {
             return;
         }
 
-        // Removed allKeys as it was unused and causing a warning
         const csvRows = [];
 
         // Add headers row
@@ -1170,13 +1146,13 @@ function App() {
                 e.preventDefault();
                 setLoading(true);
                 try {
-                    const { data, error } = await supabaseClientInstance
+                    const response = await supabaseClientInstance // Changed to response
                         .from('products')
                         .update(editingProduct)
                         .eq('id', editingProduct.id)
                         .select();
-                    if (error) throw error;
-                    setProducts(prev => prev.map(p => p.id === data[0].id ? data[0] : p));
+                    if (response.error) throw response.error; // Use response.error
+                    setProducts(prev => prev.map(p => p.id === response.data[0].id ? response.data[0] : p)); // Use response.data
                     setEditingProduct(null);
                     setCurrentPage('viewProducts');
                     showMessage('Product updated successfully!', 'success');
@@ -1273,12 +1249,12 @@ function App() {
                 e.preventDefault();
                 setLoading(true);
                 try {
-                    const { data, error } = await supabaseClientInstance
+                    const response = await supabaseClientInstance // Changed to response
                         .from('representatives')
                         .update(editingRepresentative)
                         .eq('id', editingRepresentative.id)
                         .select();
-                    if (error) throw error;
+                    if (response.error) throw response.error; // Use response.error
                     fetchRepresentatives(); // Re-fetch to get updated vendor name
                     setEditingRepresentative(null);
                     setCurrentPage('viewRepresentatives');
